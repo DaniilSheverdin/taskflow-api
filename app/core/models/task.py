@@ -36,4 +36,6 @@ class Task(IntIdPk, CreatedUpdated, Base):
     )
     creator: Mapped["User"] = relationship("User", back_populates="created_tasks")
     project: Mapped["Project"] = relationship("Project", back_populates="tasks")
-    comments: Mapped[list["Comment"]] = relationship("Comment", back_populates="task", cascade="all, delete-orphan")
+    comments: Mapped[list["Comment"]] = relationship(
+        "Comment", back_populates="task", cascade="all, delete-orphan"
+    )
