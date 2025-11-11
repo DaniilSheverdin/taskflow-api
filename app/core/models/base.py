@@ -1,7 +1,6 @@
-from datetime import datetime
 from typing import Annotated
 
-from sqlalchemy import func, TIMESTAMP, Integer
+from sqlalchemy import func, TIMESTAMP, Integer, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, declared_attr
 from sqlalchemy.ext.asyncio import AsyncAttrs
 
@@ -16,8 +15,8 @@ class Base(AsyncAttrs, DeclarativeBase):
     __abstract__ = True
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    created_at: datetime = mapped_column(TIMESTAMP, server_default=func.now())
-    updated_at: datetime = mapped_column(
+    created_at: Mapped[DateTime] = mapped_column(TIMESTAMP, server_default=func.now())
+    updated_at: Mapped[DateTime] = mapped_column(
         TIMESTAMP, server_default=func.now(), onupdate=func.now()
     )
 

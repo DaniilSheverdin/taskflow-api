@@ -1,17 +1,18 @@
-from typing import Text
+from typing import Text, Optional
 
+from sqlalchemy import String
 from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, mapped_column
 
 from app.core.models.base import Base, str_uniq
 
 
 class Role(Base):
-    name: Mapped[str]
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
     code: Mapped[str_uniq]
-    description: Mapped[Text | None] = None
+    description: Mapped[Optional[str]] = mapped_column(String(500))
 
     members: Mapped[list["User"]] = relationship(
-        back_populates="roles",
-        secondary="users_roles",
+        "User",
+        back_populates="role",
     )
