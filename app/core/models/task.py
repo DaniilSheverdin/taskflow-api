@@ -1,10 +1,11 @@
 from typing import Optional
 
-from sqlalchemy import ForeignKey, DateTime, String
+from sqlalchemy import ForeignKey, DateTime, String, text
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import relationship
 
 from app.core.models.base import Base
+from app.core.models.enums.task_status import Status
 from app.core.models.mixins.created_updated import CreatedUpdated
 from app.core.models.mixins.int_id_pk import IntIdPk
 from app.core.models.project import Project
@@ -21,6 +22,12 @@ class Task(IntIdPk, CreatedUpdated, Base):
         ForeignKey("projects.id", ondelete="SET NULL"), nullable=True
     )
     deadline: Mapped[Optional[DateTime]] = mapped_column(DateTime)
+    status: Mapped[Status] = mapped_column(
+        String(50),
+        default=Status.PENDING,
+        server_default=text(Status.PENDING.name),
+        nullable=False,
+    )
 
     assigned_to: Mapped[list["User"]] = relationship(
         back_populates="assigned_tasks",
