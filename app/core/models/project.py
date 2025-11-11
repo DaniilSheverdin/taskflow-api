@@ -5,9 +5,11 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import relationship
 
 from app.core.models.base import Base
+from app.core.models.mixins.created_updated import CreatedUpdated
+from app.core.models.mixins.int_id_pk import IntIdPk
 
 
-class Project(Base):
+class Project(IntIdPk, CreatedUpdated, Base):
     name: Mapped[str] = mapped_column(String(200), nullable=False)
     description: Mapped[Optional[str]] = mapped_column(String(500))
     private: Mapped[bool] = mapped_column(

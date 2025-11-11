@@ -5,11 +5,13 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import relationship
 
 from app.core.models.base import Base
+from app.core.models.mixins.created_updated import CreatedUpdated
+from app.core.models.mixins.int_id_pk import IntIdPk
 from app.core.models.project import Project
 from app.core.models.user import User
 
 
-class Task(Base):
+class Task(IntIdPk, CreatedUpdated, Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[Optional[str]] = mapped_column(String(500))
     creator_id: Mapped[int] = mapped_column(

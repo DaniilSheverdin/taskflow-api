@@ -3,9 +3,11 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import relationship
 
 from app.core.models.base import Base, str_uniq
+from app.core.models.mixins.created_updated import CreatedUpdated
+from app.core.models.mixins.int_id_pk import IntIdPk
 
 
-class User(Base):
+class User(IntIdPk, CreatedUpdated, Base):
     first_name: Mapped[str] = mapped_column(String(100), nullable=False)
     last_name: Mapped[str] = mapped_column(String(100), nullable=False)
     email: Mapped[str_uniq]
