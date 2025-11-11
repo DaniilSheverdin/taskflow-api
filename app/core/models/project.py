@@ -13,7 +13,7 @@ class Project(IntIdPk, CreatedUpdated, Base):
     name: Mapped[str] = mapped_column(String(200), nullable=False)
     description: Mapped[Optional[str]] = mapped_column(String(500))
     private: Mapped[bool] = mapped_column(
-        Boolean, default=False, server_default=text("false")
+        Boolean, default=False, server_default=text("'false'")
     )
     creator_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
 
