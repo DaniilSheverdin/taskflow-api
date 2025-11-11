@@ -18,6 +18,9 @@ class Settings(BaseSettings):
     DB_NAME: str
     DB_HOST: str
     DB_PORT: str
+    POOL_SIZE: int
+    POOL_OVERFLOW: int
+    POOL_TIMEOUT: int
     model_config = SettingsConfigDict(env_file=BASE_DIR / ".env", extra="ignore")
 
     @computed_field
