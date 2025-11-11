@@ -5,6 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import relationship
 
 from app.core.models.base import Base
+from app.core.models.comment import Comment
 from app.core.models.enums.task_status import Status
 from app.core.models.mixins.created_updated import CreatedUpdated
 from app.core.models.mixins.int_id_pk import IntIdPk
@@ -35,3 +36,4 @@ class Task(IntIdPk, CreatedUpdated, Base):
     )
     creator: Mapped["User"] = relationship("User", back_populates="created_tasks")
     project: Mapped["Project"] = relationship("Project", back_populates="tasks")
+    comments: Mapped[list["Comment"]] = relationship("Comment", back_populates="task", cascade="all, delete-orphan")
