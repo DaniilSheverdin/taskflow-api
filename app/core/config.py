@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     POOL_SIZE: int
     POOL_OVERFLOW: int
     POOL_TIMEOUT: int
+    LOGS_DIR: Path = BASE_DIR / "logs"
     model_config = SettingsConfigDict(env_file=BASE_DIR / ".env", extra="ignore")
 
     @computed_field
