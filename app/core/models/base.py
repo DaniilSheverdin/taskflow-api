@@ -1,8 +1,7 @@
 from typing import Annotated
 
-from sqlalchemy import func, TIMESTAMP, DateTime, Integer
 from sqlalchemy.ext.asyncio import AsyncAttrs
-from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, declared_attr
+from sqlalchemy.orm import mapped_column, DeclarativeBase, declared_attr
 
 from app.utils.case_converter import camel_case_to_snake_case
 

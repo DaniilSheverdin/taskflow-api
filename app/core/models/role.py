@@ -1,4 +1,4 @@
-from typing import Text, Optional
+from typing import Optional
 
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped
