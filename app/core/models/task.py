@@ -24,7 +24,6 @@ class Task(IntIdPk, CreatedUpdated, Base):
     )
     deadline: Mapped[Optional[DateTime]] = mapped_column(DateTime)
     status: Mapped[Status] = mapped_column(
-        String(50),
         default=Status.PENDING,
         server_default=text(f"'{Status.PENDING.name}'"),
         nullable=False,

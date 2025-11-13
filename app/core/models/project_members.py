@@ -9,5 +9,5 @@ class ProjectMembers(Base):
         ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
     )
     project_id: Mapped[int] = mapped_column(
-        ForeignKey("project.id", ondelete="CASCADE"), primary_key=True
+        ForeignKey("projects.id", ondelete="CASCADE"), primary_key=True
     )
