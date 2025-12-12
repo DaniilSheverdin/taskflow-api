@@ -6,13 +6,20 @@ from pydantic import computed_field
 BASE_DIR = Path(__file__).parent.parent.parent
 
 
+class AuthJWT(BaseSettings):
+    private_key: Path = BASE_DIR / "certs" / "jwt-private.pem"
+    public_key: Path = BASE_DIR / "certs" / "jwt-public.pem"
+    algorithm: str = "RS256"
+    access_token_expire_minutes: int = 60
+
+
+class ApiConfig(BaseSettings):
+    prefix: str = "/api"
+
+
 class Settings(BaseSettings):
     """Настройки приложения"""
 
-    SECRET_KEY: str
-    ALGORITHM: str
-    ACCESS_TOKEN_EXPIRE_MINUTES: int
-    REFRESH_TOKEN_EXPIRE_MINUTES: int
     DB_USER: str
     DB_PASSWORD: str
     DB_NAME: str
@@ -22,6 +29,8 @@ class Settings(BaseSettings):
     POOL_OVERFLOW: int
     POOL_TIMEOUT: int
     LOGS_DIR: Path = BASE_DIR / "logs"
+    api_config: ApiConfig = ApiConfig()
+    auth_jwt: AuthJWT = AuthJWT()
     model_config = SettingsConfigDict(env_file=BASE_DIR / ".env", extra="ignore")
 
     @computed_field

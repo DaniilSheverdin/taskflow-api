@@ -11,9 +11,9 @@ class User(IntIdPk, CreatedUpdated, Base):
     first_name: Mapped[str] = mapped_column(String(100), nullable=False)
     last_name: Mapped[str] = mapped_column(String(100), nullable=False)
     email: Mapped[str_uniq]
-    password: Mapped[str]
+    password: Mapped[bytes]
     role_id: Mapped[int] = mapped_column(
-        ForeignKey("roles.id"), default=1, server_default=text("1")
+        ForeignKey("roles.id"), default=2, server_default=text("2")
     )
 
     role: Mapped["Role"] = relationship(back_populates="members")

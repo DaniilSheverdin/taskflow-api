@@ -1,8 +1,8 @@
-"""Initial revision
+"""init
 
-Revision ID: 24b3704cde67
+Revision ID: 0b2cf2120bba
 Revises:
-Create Date: 2025-11-13 17:17:24.476568
+Create Date: 2025-12-12 17:37:39.456250
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = "24b3704cde67"
+revision: str = "0b2cf2120bba"
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -48,8 +48,8 @@ def upgrade() -> None:
         sa.Column("first_name", sa.String(length=100), nullable=False),
         sa.Column("last_name", sa.String(length=100), nullable=False),
         sa.Column("email", sa.String(), nullable=False),
-        sa.Column("password", sa.String(), nullable=False),
-        sa.Column("role_id", sa.Integer(), server_default=sa.text("1"), nullable=False),
+        sa.Column("password", sa.LargeBinary(), nullable=False),
+        sa.Column("role_id", sa.Integer(), server_default=sa.text("2"), nullable=False),
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column(
             "created_at",
@@ -192,7 +192,4 @@ def downgrade() -> None:
     op.drop_table("projects")
     op.drop_table("users")
     op.drop_table("roles")
-
-    # Удаление типов ENUM
-    op.execute("DROP TYPE IF EXISTS status")
     # ### end Alembic commands ###

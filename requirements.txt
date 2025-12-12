@@ -8,3 +8,6 @@ pydantic-settings==2.11.0
 python-dotenv==1.2.1
 pyjwt[crypto]==2.10.1
 loguru==0.7.2
+bcrypt==5.0.0
+pydantic[email]
+pyjwt
