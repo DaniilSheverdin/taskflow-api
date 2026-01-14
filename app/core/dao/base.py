@@ -75,7 +75,9 @@ class BaseDAO(Generic[T]):
             logger.error(f"Ошибка получения {self.model.__name__} по ID={pk}: {e}")
             raise
 
-    async def find_one_or_none(self, filter: BaseModel) -> T | None:
+    async def find_one_or_none(
+        self, filter: BaseModel, options: List[Any] = None
+    ) -> T | None:
         """
         Ищет одну запись по фильтру
         :param filter:
@@ -87,6 +89,8 @@ class BaseDAO(Generic[T]):
         )
         try:
             stmt = select(self.model).filter_by(**filter_dict)
+            if options:
+                stmt = stmt.options(*options)
             result = await self._session.execute(stmt)
             record = result.scalar_one_or_none()
             message = f"Запись {'найдена' if record else 'не найдена'} по фильтру: {filter_dict}"
@@ -99,7 +103,11 @@ class BaseDAO(Generic[T]):
             raise
 
     async def find(
-        self, offset: int = 0, limit: int = 100, filter: Optional[BaseModel] = None
+        self,
+        offset: int = 0,
+        limit: int = 100,
+        filter: Optional[BaseModel] = None,
+        options: List[Any] = None,
     ) -> list[T]:
         """
         Получает список объектов по фильтру и пагинации
@@ -113,6 +121,8 @@ class BaseDAO(Generic[T]):
             stmt = (
                 select(self.model).filter_by(**filter_dict).offset(offset).limit(limit)
             )
+            if options:
+                stmt = stmt.options(*options)
             result = await self._session.execute(stmt)
             records = list(result.scalars().all())
             logger.debug(f"Найдено {len(records)} записей")
