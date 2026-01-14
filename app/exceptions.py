@@ -9,3 +9,12 @@ IncorrectEmailOrPasswordException = HTTPException(
     status_code=status.HTTP_400_BAD_REQUEST,
     detail="Неправильный логин или пароль",
 )
+
+UnauthorizedException = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Неправильный токен",
+)
+
+InvalidTokenException = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED, detail="Неправильная структура токена"
+)

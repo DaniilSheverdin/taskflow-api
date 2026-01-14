@@ -3,7 +3,7 @@ from fastapi.params import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
-from app.core.dependencies.auth import authenticate_user
+from app.core.dependencies.auth import authenticate_user, get_current_user
 from app.core.dependencies.dao import (
     get_session_with_commit,
     get_session_without_commit,
@@ -14,7 +14,7 @@ from app.core.schemas.user import (
     EmailModel,
     UserCreate,
     TokenInfo,
-    UserLogin,
+    UserInfo,
 )
 from app.core.dao.user import UserDAO
 from app.exceptions import UserAlreadyExistsException
@@ -56,3 +56,8 @@ async def jwt_login(
         expire_minutes=settings.auth_jwt.access_token_expire_minutes,
     )
     return TokenInfo(access_token=token, token_type="bearer")
+
+
+@router.get("/users/me/")
+async def get_current_user(user: User = Depends(get_current_user)):
+    return UserInfo.model_validate(user)

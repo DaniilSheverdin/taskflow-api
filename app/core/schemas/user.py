@@ -3,7 +3,10 @@ from pydantic import (
     EmailStr,
     Field,
     ConfigDict,
+    computed_field,
 )
+
+from app.core.schemas.role import Role
 
 
 class EmailModel(BaseModel):
@@ -31,3 +34,16 @@ class UserLogin(EmailModel):
 class TokenInfo(BaseModel):
     access_token: str
     token_type: str
+
+
+class UserInfo(UserBase):
+    id: int
+    role: Role = Field(exclude=True)
+
+    @computed_field
+    def role_name(self) -> str:
+        return self.role.name
+
+    @computed_field
+    def role_id(self) -> int:
+        return self.role.id

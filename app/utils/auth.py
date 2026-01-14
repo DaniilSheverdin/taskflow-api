@@ -1,5 +1,4 @@
 import datetime
-from typing import Optional
 
 import bcrypt
 import jwt
@@ -24,5 +23,5 @@ def encode_jwt(payload: dict, private_key: str, algorithm: str, expire_minutes: 
 
 
 def decode_jwt(token: str | bytes, public_key: str, algorithm: str):
-    decoded = jwt.decode(token, public_key, algorithm=[algorithm])
+    decoded = jwt.decode(token, public_key, algorithms=[algorithm])
     return decoded
