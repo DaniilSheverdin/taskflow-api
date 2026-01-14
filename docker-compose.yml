@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     ports:
-      - "5433:5432"
+      - "5433:${DB_PORT}"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
@@ -19,9 +19,10 @@ services:
       - "8000:8000"
     depends_on:
       - db
+    volumes:
+      - ./logs:/app/logs
     environment:
-      - DATABASE_URL=postgresql+asyncpg://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
-    restart: unless-stopped
+      - DATABASE_URL=postgresql+asyncpg://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}
 
 volumes:
   postgres_data:

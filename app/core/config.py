@@ -29,6 +29,9 @@ class Settings(BaseSettings):
     POOL_OVERFLOW: int
     POOL_TIMEOUT: int
     LOGS_DIR: Path = BASE_DIR / "logs"
+    LOG_INFO_ENABLED: bool
+    LOG_ERROR_ENABLED: bool
+    LOG_DEBUG_ENABLED: bool
     api_config: ApiConfig = ApiConfig()
     auth_jwt: AuthJWT = AuthJWT()
     model_config = SettingsConfigDict(env_file=BASE_DIR / ".env", extra="ignore")
