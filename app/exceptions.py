@@ -16,5 +16,14 @@ UnauthorizedException = HTTPException(
 )
 
 InvalidTokenException = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED, detail="Неправильная структура токена"
+    status_code=status.HTTP_400_BAD_REQUEST, detail="Неправильная структура токена"
+)
+
+RefreshTokenNotFoundException = HTTPException(
+    status_code=status.HTTP_400_BAD_REQUEST,
+    detail="Рефреш Токен отсутствует в заголовке",
+)
+
+ExpiredTokenException = HTTPException(
+    status_code=status.HTTP_400_BAD_REQUEST, detail="Срок жизни токена истек."
 )

@@ -76,14 +76,22 @@ class BaseDAO(Generic[T]):
             raise
 
     async def find_one_or_none(
-        self, filter: BaseModel, options: List[Any] = None
+        self,
+        filter: BaseModel = None,
+        options: List[Any] = None,
+        filter_dict: dict = None,
     ) -> T | None:
         """
         Ищет одну запись по фильтру
+        :param options:
+        :param filter_dict:
         :param filter:
         :return:
         """
-        filter_dict = filter.model_dump(exclude_unset=True)
+        if filter is None and filter_dict is None:
+            raise ValueError("Задайте значение для filter или filter_dict")
+        if filter_dict is None and filter is not None:
+            filter_dict = filter.model_dump(exclude_unset=True)
         logger.debug(
             f"Поиск (одной) записи {self.model.__name__} по фильтру: {filter_dict}"
         )

@@ -1,24 +1,26 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
 from fastapi.params import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.config import settings
-from app.core.dependencies.auth import authenticate_user, get_current_user
+from app.core.dao.user import UserDAO
+from app.core.dependencies.auth import (
+    authenticate_user,
+    get_current_user,
+    check_refresh_token,
+)
 from app.core.dependencies.dao import (
     get_session_with_commit,
-    get_session_without_commit,
 )
 from app.core.models import User
+from app.core.schemas.token import Token
 from app.core.schemas.user import (
     UserRegister,
     EmailModel,
     UserCreate,
-    TokenInfo,
     UserInfo,
 )
-from app.core.dao.user import UserDAO
 from app.exceptions import UserAlreadyExistsException
-from app.utils.auth import encode_jwt, hash_password
+from app.utils.auth import hash_password, create_tokens_pair
 
 router = APIRouter()
 
@@ -42,22 +44,44 @@ async def register(
     return {"message": "Регистрация прошла успешно"}
 
 
-@router.post("/login/", response_model=TokenInfo)
+@router.post("/login/", response_model=Token)
 async def jwt_login(
+    response: Response,
     user: User = Depends(authenticate_user),
 ):
-    jwt_payload = {
-        "sub": user.email,
-    }
-    token = encode_jwt(
-        payload=jwt_payload,
-        private_key=settings.auth_jwt.private_key.read_text(),
-        algorithm=settings.auth_jwt.algorithm,
-        expire_minutes=settings.auth_jwt.access_token_expire_minutes,
-    )
-    return TokenInfo(access_token=token, token_type="bearer")
+    return _update_tokens(response, user.id)
+
+
+@router.post("/refresh/", response_model=Token)
+async def jwt_refresh(response: Response, user: User = Depends(check_refresh_token)):
+    return _update_tokens(response, user.id)
 
 
 @router.get("/users/me/")
 async def get_current_user(user: User = Depends(get_current_user)):
     return UserInfo.model_validate(user)
+
+
+@router.post("/logout/")
+async def logout(response: Response):
+    """
+    Удаляет рефреш токен из кук
+    :param response:
+    :return:
+    """
+    response.delete_cookie("refresh_token")
+    return {"ok": True}
+
+
+def _update_tokens(response: Response, user_id: int):
+    tokens = create_tokens_pair(str(user_id))
+    response.set_cookie(
+        key="refresh_token",
+        value=tokens.get("refresh_token"),
+        httponly=True,
+        secure=False,
+    )
+
+    return Token(
+        access_token=tokens.get("access_token"), message="Токены обновлены.", ok=True
+    )

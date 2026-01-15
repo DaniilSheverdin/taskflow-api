@@ -31,11 +31,6 @@ class UserLogin(EmailModel):
     password: str = Field(min_length=8, max_length=50)
 
 
-class TokenInfo(BaseModel):
-    access_token: str
-    token_type: str
-
-
 class UserInfo(UserBase):
     id: int
     role: Role = Field(exclude=True)
