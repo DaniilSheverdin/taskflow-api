@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from app.core.models.enums.task_status import Status
+from app.models.enums.task_status import Status
 
 
 class TaskBase(BaseModel):

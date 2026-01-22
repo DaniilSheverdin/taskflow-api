@@ -12,6 +12,8 @@ class AuthJWT(BaseSettings):
     algorithm: str = "RS256"
     access_token_expire_minutes: int = 15
     refresh_token_expire_minutes: int = 10080
+    max_sessions: int = 3
+    secure_cookie: bool = False
 
 
 class ApiConfig(BaseSettings):
@@ -33,6 +35,7 @@ class Settings(BaseSettings):
     LOG_INFO_ENABLED: bool
     LOG_ERROR_ENABLED: bool
     LOG_DEBUG_ENABLED: bool
+    DOMAIN: str
     api_config: ApiConfig = ApiConfig()
     auth_jwt: AuthJWT = AuthJWT()
     model_config = SettingsConfigDict(env_file=BASE_DIR / ".env", extra="ignore")

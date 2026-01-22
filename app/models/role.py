@@ -4,9 +4,9 @@ from sqlalchemy import String
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import relationship, mapped_column
 
-from app.core.models.base import Base, str_uniq
-from app.core.models.mixins.created_updated import CreatedUpdated
-from app.core.models.mixins.int_id_pk import IntIdPk
+from app.models.base import Base, str_uniq
+from app.models.mixins.created_updated import CreatedUpdated
+from app.models.mixins.int_id_pk import IntIdPk
 
 
 class Role(IntIdPk, CreatedUpdated, Base):

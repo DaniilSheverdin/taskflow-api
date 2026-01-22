@@ -6,7 +6,7 @@ from pydantic import (
     computed_field,
 )
 
-from app.core.schemas.role import Role
+from app.schemas.role import Role
 
 
 class EmailModel(BaseModel):
@@ -29,6 +29,9 @@ class UserRegister(UserBase):
 
 class UserLogin(EmailModel):
     password: str = Field(min_length=8, max_length=50)
+
+class UserCredentials(UserLogin):
+    fingerprint: str = Field(description="Уникальный идентификатор устройства")
 
 
 class UserInfo(UserBase):

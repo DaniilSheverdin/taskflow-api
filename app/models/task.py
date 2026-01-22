@@ -4,13 +4,13 @@ from sqlalchemy import ForeignKey, DateTime, String, text
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import relationship
 
-from app.core.models.base import Base
-from app.core.models.comment import Comment
-from app.core.models.enums.task_status import Status
-from app.core.models.mixins.created_updated import CreatedUpdated
-from app.core.models.mixins.int_id_pk import IntIdPk
-from app.core.models.project import Project
-from app.core.models.user import User
+from app.models.base import Base
+from app.models.comment import Comment
+from app.models.enums.task_status import Status
+from app.models.mixins.created_updated import CreatedUpdated
+from app.models.mixins.int_id_pk import IntIdPk
+from app.models.project import Project
+from app.models.user import User
 
 
 class Task(IntIdPk, CreatedUpdated, Base):

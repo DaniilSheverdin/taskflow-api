@@ -2,9 +2,9 @@ from sqlalchemy import ForeignKey, text, String
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import relationship
 
-from app.core.models.base import Base, str_uniq
-from app.core.models.mixins.created_updated import CreatedUpdated
-from app.core.models.mixins.int_id_pk import IntIdPk
+from app.models.base import Base, str_uniq
+from app.models.mixins.created_updated import CreatedUpdated
+from app.models.mixins.int_id_pk import IntIdPk
 
 
 class User(IntIdPk, CreatedUpdated, Base):
@@ -28,4 +28,9 @@ class User(IntIdPk, CreatedUpdated, Base):
     )
     assigned_tasks: Mapped[list["Task"]] = relationship(
         "Task", back_populates="assigned_to", secondary="task_responsibles"
+    )
+    refresh_sessions: Mapped[list["RefreshSession"]] = relationship(
+        "RefreshSession",
+        back_populates="user",
+        cascade="all, delete-orphan",
     )

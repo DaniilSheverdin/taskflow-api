@@ -2,9 +2,9 @@ from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, relationship
 from sqlalchemy.testing.schema import mapped_column
 
-from app.core.models.base import Base
-from app.core.models.mixins.created_updated import CreatedUpdated
-from app.core.models.mixins.int_id_pk import IntIdPk
+from app.models.base import Base
+from app.models.mixins.created_updated import CreatedUpdated
+from app.models.mixins.int_id_pk import IntIdPk
 
 
 class Comment(IntIdPk, CreatedUpdated, Base):

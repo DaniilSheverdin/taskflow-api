@@ -5,7 +5,7 @@ from fastapi import FastAPI
 
 from app.core.config import settings
 from app.core.logger import setup_logger
-from app.routers import auth
+from app.routers import auth, users
 
 
 @asynccontextmanager
@@ -23,14 +23,14 @@ app = FastAPI(
 setup_logger()
 
 
-@app.get("/health")
+@app.get("/api/health")
 async def health_check():
     return {"status": "healthy"}
 
 
-routers = [auth]
+routers = [auth, users]
 for router in routers:
-    app.include_router(router.router, prefix=settings.api_config.prefix, tags=["api"])
+    app.include_router(router.router, prefix=settings.api_config.prefix)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

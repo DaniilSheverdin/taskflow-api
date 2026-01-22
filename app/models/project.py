@@ -4,9 +4,9 @@ from sqlalchemy import ForeignKey, Boolean, String, text
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import relationship
 
-from app.core.models.base import Base
-from app.core.models.mixins.created_updated import CreatedUpdated
-from app.core.models.mixins.int_id_pk import IntIdPk
+from app.models.base import Base
+from app.models.mixins.created_updated import CreatedUpdated
+from app.models.mixins.int_id_pk import IntIdPk
 
 
 class Project(IntIdPk, CreatedUpdated, Base):

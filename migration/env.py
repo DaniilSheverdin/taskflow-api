@@ -8,15 +8,8 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
 from app.core.config import settings
-from app.core.models import (
-    user,
-    project_members,
-    project,
+from app.models import (
     base,
-    task,
-    task_responsibles,
-    role,
-    comment,
 )
 
 # this is the Alembic Config object, which provides

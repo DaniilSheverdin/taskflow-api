@@ -2,11 +2,11 @@ from typing import TypeVar, Generic, Type, Any, Optional, List
 
 from loguru import logger
 from pydantic import BaseModel
-from sqlalchemy import select, update
+from sqlalchemy import select, update, func, desc, asc
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.models.base import Base
+from app.models.base import Base
 
 T = TypeVar("T", bound=Base)
 
@@ -77,12 +77,16 @@ class BaseDAO(Generic[T]):
 
     async def find_one_or_none(
         self,
-        filter: BaseModel = None,
+        filter: Optional[BaseModel] = None,
         options: List[Any] = None,
-        filter_dict: dict = None,
+        filter_dict: Optional[dict] = None,
+        order_by_field: str = None,
+        order_desc: bool = False,
     ) -> T | None:
         """
         Ищет одну запись по фильтру
+        :param order_by_field:
+        :param order_desc:
         :param options:
         :param filter_dict:
         :param filter:
@@ -97,6 +101,14 @@ class BaseDAO(Generic[T]):
         )
         try:
             stmt = select(self.model).filter_by(**filter_dict)
+            if order_by_field:
+                field = getattr(self.model, order_by_field, None)
+                if field:
+                    if order_desc:
+                        stmt = stmt.order_by(desc(field))
+                    else:
+                        stmt = stmt.order_by(asc(field))
+
             if options:
                 stmt = stmt.options(*options)
             result = await self._session.execute(stmt)
@@ -115,13 +127,15 @@ class BaseDAO(Generic[T]):
         offset: int = 0,
         limit: int = 100,
         filter: Optional[BaseModel] = None,
+        filter_dict: Optional[dict] = None,
         options: List[Any] = None,
     ) -> list[T]:
         """
         Получает список объектов по фильтру и пагинации
         """
 
-        filter_dict = filter.model_dump(exclude_unset=True) if filter else {}
+        if filter_dict is None:
+            filter_dict = filter.model_dump(exclude_unset=True) if filter else {}
         logger.debug(
             f"Поиск всех записей {self.model.__name__} по фильтру: {filter_dict}; offset: {offset}, limit: {limit}"
         )
@@ -168,4 +182,21 @@ class BaseDAO(Generic[T]):
             return updated_records
         except SQLAlchemyError as e:
             logger.error(f"Ошибка обновления {self.model.__name__}: {e}")
+            raise
+
+    async def count(
+        self, filters: Optional[BaseModel] = None, filter_dict: Optional[dict] = None
+    ) -> int:
+        if filters is None and filter_dict is None:
+            raise ValueError("Задайте значение для filter или filter_dict")
+        if filter_dict is None and filters is not None:
+            filter_dict = filters.model_dump(exclude_unset=True)
+
+        try:
+            stmt = select(func.count()).select_from(self.model).filter_by(**filter_dict)
+            result = await self._session.execute(stmt)
+            count_value = result.scalar_one()
+            return count_value
+        except SQLAlchemyError as e:
+            logger.error(f"Ошибка подсчёта {self.model.__name__}: {e}")
             raise
